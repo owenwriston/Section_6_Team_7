@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 07, 2026 at 12:04 AM
+-- Generation Time: Oct 07, 2026 at 12:46 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -110,6 +110,21 @@ CREATE TABLE `tasks` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `task_comments`
+--
+
+CREATE TABLE `task_comments` (
+  `cmid` int(10) UNSIGNED NOT NULL,
+  `tid` int(10) UNSIGNED NOT NULL,
+  `uid_author` int(10) UNSIGNED DEFAULT NULL,
+  `comment_text` text NOT NULL,
+  `create_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `edit_date` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `task_users`
 --
 
@@ -186,6 +201,14 @@ ALTER TABLE `tasks`
   ADD KEY `uid_creator` (`uid_creator`);
 
 --
+-- Indexes for table `task_comments`
+--
+ALTER TABLE `task_comments`
+  ADD PRIMARY KEY (`cmid`),
+  ADD KEY `idx_tid_date` (`tid`,`create_date`),
+  ADD KEY `uid_author` (`uid_author`);
+
+--
 -- Indexes for table `task_users`
 --
 ALTER TABLE `task_users`
@@ -226,6 +249,12 @@ ALTER TABLE `projects`
 --
 ALTER TABLE `tasks`
   MODIFY `tid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `task_comments`
+--
+ALTER TABLE `task_comments`
+  MODIFY `cmid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -276,6 +305,13 @@ ALTER TABLE `project_users`
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`fpid`) REFERENCES `floorplans` (`fpid`) ON DELETE CASCADE,
   ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`uid_creator`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `task_comments`
+--
+ALTER TABLE `task_comments`
+  ADD CONSTRAINT `task_comments_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tasks` (`tid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `task_comments_ibfk_2` FOREIGN KEY (`uid_author`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `task_users`
