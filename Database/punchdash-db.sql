@@ -70,6 +70,8 @@ CREATE TABLE `floorplan_users` (
 CREATE TABLE `projects` (
   `pid` int(10) UNSIGNED NOT NULL,
   `uid_owner` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `status` enum('active','on_hold','completed','archived') NOT NULL DEFAULT 'active',
   `create_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_update_date` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `location` varchar(255) NOT NULL
