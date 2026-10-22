@@ -8,10 +8,12 @@ if (!isset($_SESSION['uid'])) {
 
 require __DIR__ . '/../services/db-connect.php';
 require __DIR__ . '/../services/display-projs.php';
+require __DIR__ . '/../services/auth-permissions.php';
 
 $uid = (int) $_SESSION['uid'];
 
-$stmt = $pdo->prepare('SELECT fname, lname FROM users WHERE uid = ?');
+//exit if user no longer exists
+$stmt = $pdo->prepare('SELECT fname, lname, permissions FROM users WHERE uid = ?');
 $stmt->execute([$uid]);
 $user = $stmt->fetch();
 
@@ -42,6 +44,10 @@ $projects = get_user_projects($pdo, $uid);
     </form>
 
     <h2>Your Projects</h2>
+
+    <?php if (can_create_project($user['permissions'])): ?>
+        <p><a href="create-project.php">Create New Project</a></p>
+    <?php endif; ?>
 
     <?php if (count($projects) === 0): ?>
         <p>You have no projects yet.</p>

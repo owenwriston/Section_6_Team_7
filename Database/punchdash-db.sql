@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 07, 2026 at 12:04 AM
+-- Generation Time: Oct 23, 2026 at 12:12 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -140,6 +140,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`uid`, `email`, `passhash`, `fname`, `lname`, `create_date`, `company`, `com-role`, `permissions`) VALUES
+(1, 'admin@admin.com', '$2y$10$d350D8FWYrq4hWI5rQ4piOLa6fZ31uy/aOkBv/Wqj/DGXWJWupvDq', 'Admin', '1', '2026-10-22 17:36:25', 'DEV', 'DEV', 'admin');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -233,7 +240,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
