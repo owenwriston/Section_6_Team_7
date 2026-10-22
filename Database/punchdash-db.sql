@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 07, 2026 at 12:46 AM
+-- Generation Time: Oct 23, 2026 at 12:12 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -70,6 +70,8 @@ CREATE TABLE `floorplan_users` (
 CREATE TABLE `projects` (
   `pid` int(10) UNSIGNED NOT NULL,
   `uid_owner` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `status` enum('active','on_hold','completed','archived') NOT NULL DEFAULT 'active',
   `create_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_update_date` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `location` varchar(255) NOT NULL
@@ -110,21 +112,6 @@ CREATE TABLE `tasks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `task_comments`
---
-
-CREATE TABLE `task_comments` (
-  `cmid` int(10) UNSIGNED NOT NULL,
-  `tid` int(10) UNSIGNED NOT NULL,
-  `uid_author` int(10) UNSIGNED DEFAULT NULL,
-  `comment_text` text NOT NULL,
-  `create_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `edit_date` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `task_users`
 --
 
@@ -151,6 +138,13 @@ CREATE TABLE `users` (
   `com-role` varchar(255) DEFAULT NULL,
   `permissions` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`uid`, `email`, `passhash`, `fname`, `lname`, `create_date`, `company`, `com-role`, `permissions`) VALUES
+(1, 'admin@admin.com', '$2y$10$d350D8FWYrq4hWI5rQ4piOLa6fZ31uy/aOkBv/Wqj/DGXWJWupvDq', 'Admin', '1', '2026-10-22 17:36:25', 'DEV', 'DEV', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -201,14 +195,6 @@ ALTER TABLE `tasks`
   ADD KEY `uid_creator` (`uid_creator`);
 
 --
--- Indexes for table `task_comments`
---
-ALTER TABLE `task_comments`
-  ADD PRIMARY KEY (`cmid`),
-  ADD KEY `idx_tid_date` (`tid`,`create_date`),
-  ADD KEY `uid_author` (`uid_author`);
-
---
 -- Indexes for table `task_users`
 --
 ALTER TABLE `task_users`
@@ -251,16 +237,10 @@ ALTER TABLE `tasks`
   MODIFY `tid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `task_comments`
---
-ALTER TABLE `task_comments`
-  MODIFY `cmid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -305,13 +285,6 @@ ALTER TABLE `project_users`
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`fpid`) REFERENCES `floorplans` (`fpid`) ON DELETE CASCADE,
   ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`uid_creator`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
-
---
--- Constraints for table `task_comments`
---
-ALTER TABLE `task_comments`
-  ADD CONSTRAINT `task_comments_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tasks` (`tid`) ON DELETE CASCADE,
-  ADD CONSTRAINT `task_comments_ibfk_2` FOREIGN KEY (`uid_author`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `task_users`

@@ -1,0 +1,2 @@
+# block all file accesses thru URL
+Require all denied
