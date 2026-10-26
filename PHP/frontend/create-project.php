@@ -22,7 +22,7 @@ if (!$me) {
     exit;
 }
 
-//prevent unauthorized users from accessing create project, even option if hidden
+// Server-side permission check: hiding the dashboard link is not enough
 if (!can_create_project($me['permissions'])) {
     http_response_code(403);
     echo 'Only Admins and Project Owners can create projects. <a href="dashboard.php">Back to dashboard</a>';
@@ -34,7 +34,7 @@ $form     = ['name' => '', 'location' => ''];
 $selected = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //end this session if file is too large
+    // PHP drops the whole request when it is bigger than post_max_size
     if (empty($_POST) && empty($_FILES) && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
         $error = 'The upload is larger than the server allows. Try fewer or smaller PDFs.';
     } else {
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// People who can be assigned
+// People who can be assigned (everyone except the current user)
 $stmt = $pdo->prepare(
     'SELECT uid, fname, lname, email, company FROM users WHERE uid <> ? ORDER BY lname, fname'
 );
