@@ -67,7 +67,7 @@ function load_member_targets(PDO $pdo, int $actorUid, int $pid, array $ids): arr
     return ['', $allowed, $owner, $targets];
 }
 
-Adds users to a project
+//Adds users to a project
 function add_project_members(PDO $pdo, int $actorUid, int $pid, array $uids): array
 {
     $ids = clean_ids($uids);
