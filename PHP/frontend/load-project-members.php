@@ -32,7 +32,7 @@ if ($pid <= 0 || !can_view_project($pdo, $uid, $me['permissions'], $pid)) {
 $roles = manageable_member_roles($pdo, $uid, $me['permissions'], $pid);
 if (count($roles) === 0) {
     http_response_code(403);
-    echo "You can't manage members of this project. <a href=\"project-view.php?pid=$pid\">Back to project</a>";
+    echo "You can't manage members of this project. <a href=\"project-display.php?pid=$pid\">Back to project</a>";
     exit;
 }
 
@@ -91,7 +91,7 @@ foreach ($members as $m) {
     <title>PunchDash - Members of <?= htmlspecialchars($title) ?></title>
 </head>
 <body>
-    <p><a href="project-view.php?pid=<?= $pid ?>">&larr; Back to project</a></p>
+    <p><a href="project-display.php?pid=<?= $pid ?>">&larr; Back to project</a></p>
 
     <h1>Members of <?= htmlspecialchars($title) ?></h1>
     <p>Owner: <?= htmlspecialchars(trim($project['fname'] . ' ' . $project['lname'])) ?></p>
