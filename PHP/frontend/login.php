@@ -52,10 +52,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
         </label><br>
         <label>Password
-            <input type="password" name="password" required>
+            <input type="password" name="password" id="login-password" required>
+			<button type="button" onclick="togglePassword('login-password', this)">Show</button>
         </label><br>
         <button type="submit">Log In</button>
     </form>
+	
+	<script>
+	function togglePassword(inputId, btn) {
+		const field = document.getElementById(inputId);
+		if (field.type === 'password') {
+			field.type = 'text';
+			btn.textContent = 'Hide';
+		} else {
+			field.type = 'password';
+			btn.textContent = 'Show';
+		}
+	}
+	</script>
 
     <p><a href="create-account.php">Create Account</a></p>
 </body>
