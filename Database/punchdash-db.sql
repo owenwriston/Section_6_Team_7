@@ -144,7 +144,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`uid`, `email`, `passhash`, `fname`, `lname`, `create_date`, `company`, `com-role`, `permissions`) VALUES
-(1, 'admin@admin.com', '$2y$10$d350D8FWYrq4hWI5rQ4piOLa6fZ31uy/aOkBv/Wqj/DGXWJWupvDq', 'Admin', '1', '2026-10-22 17:36:25', 'DEV', 'DEV', 'admin');
+(1, 'admin@admin.com', '$2y$10$pqzCPOqF8VZCMT6nSZlwNu5DaxGz588Kp1OPPzMyNf21vS4.75liy', 'Admin', '1', '2026-10-22 17:36:25', 'DEV', 'DEV', 'admin');
 
 --
 -- Indexes for dumped tables
