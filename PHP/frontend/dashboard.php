@@ -96,7 +96,7 @@ foreach ($projects as $p) {
                 $confirm = 'Delete "' . $title . '"? This permanently deletes its floorplans, tasks and attachments and cannot be undone.';
                 ?>
                 <tr>
-                    <td><a href="project-view.php?pid=<?= (int) $p['pid'] ?>"><?= htmlspecialchars($title) ?></a></td>
+                    <td><a href="project-display.php?pid=<?= (int) $p['pid'] ?>"><?= htmlspecialchars($title) ?></a></td>
                     <td><?= htmlspecialchars($p['location']) ?></td>
                     <td><?= htmlspecialchars(str_replace('_', ' ', $p['status'])) ?></td>
                     <?php if ($canDeleteAny): ?>
