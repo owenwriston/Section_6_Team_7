@@ -99,9 +99,16 @@ CREATE TABLE `tasks` (
   `tid` int(10) UNSIGNED NOT NULL,
   `fpid` int(10) UNSIGNED NOT NULL,
   `uid_creator` int(10) UNSIGNED DEFAULT NULL,
+  `uid_last_editor` int(10) UNSIGNED DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `status` enum('open','in_progress','done','closed') NOT NULL DEFAULT 'open',
+  `status` enum('open','pending','closed') NOT NULL DEFAULT 'open',
+  `task_type` enum('issue','planned_work','other') NOT NULL DEFAULT 'issue',
+  `room_number` varchar(50) DEFAULT NULL,
+  `stamp_initials` varchar(10) DEFAULT NULL,
+  `root_cause` varchar(255) DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `due_date` datetime DEFAULT NULL,
   `pos_x` decimal(7,4) DEFAULT NULL,
   `pos_y` decimal(7,4) DEFAULT NULL,
   `page` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
@@ -141,6 +148,7 @@ CREATE TABLE `users` (
 
 --
 -- Dumping data for table `users`
+--    note that password is "adminuser"
 --
 
 INSERT INTO `users` (`uid`, `email`, `passhash`, `fname`, `lname`, `create_date`, `company`, `com-role`, `permissions`) VALUES
@@ -192,7 +200,8 @@ ALTER TABLE `project_users`
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`tid`),
   ADD KEY `idx_fp_status` (`fpid`,`status`),
-  ADD KEY `uid_creator` (`uid_creator`);
+  ADD KEY `uid_creator` (`uid_creator`),
+  ADD KEY `uid_last_editor` (`uid_last_editor`);
 
 --
 -- Indexes for table `task_users`
@@ -284,7 +293,8 @@ ALTER TABLE `project_users`
 --
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`fpid`) REFERENCES `floorplans` (`fpid`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`uid_creator`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
+  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`uid_creator`) REFERENCES `users` (`uid`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tasks_ibfk_3` FOREIGN KEY (`uid_last_editor`) REFERENCES `users` (`uid`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `task_users`
