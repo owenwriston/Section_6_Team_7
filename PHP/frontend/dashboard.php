@@ -33,7 +33,10 @@ if (empty($_SESSION['csrf'])) {
 $flashError = $_SESSION['flash_error'] ?? '';
 unset($_SESSION['flash_error']);
 
-$projects = get_user_projects($pdo, $uid, $user['permissions']);
+// Filters from the query string (validated inside the service)
+$filters       = normalize_project_filters($_GET);
+$filtersActive = project_filters_active($filters);
+$projects      = get_user_projects($pdo, $uid, $user['permissions'], $filters);
 
 $canDeleteAny = false;
 foreach ($projects as $p) {
@@ -79,9 +82,46 @@ foreach ($projects as $p) {
         <p><a href="manage-users.php">Manage Users</a></p>
     <?php endif; ?>
 
+    <form method="get" action="dashboard.php">
+        <label>Search
+            <input type="search" name="q" value="<?= htmlspecialchars($filters['q']) ?>" maxlength="100"
+                   placeholder="Name or location">
+        </label>
+        <label>Status
+            <select name="status">
+                <option value="">All</option>
+                <?php foreach (PROJECT_STATUSES as $st): ?>
+                    <option value="<?= $st ?>" <?= $filters['status'] === $st ? 'selected' : '' ?>>
+                        <?= htmlspecialchars(ucwords(str_replace('_', ' ', $st))) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </label>
+        <label>Show
+            <select name="scope">
+                <option value="all"      <?= $filters['scope'] === 'all' ? 'selected' : '' ?>>All my projects</option>
+                <option value="owned"    <?= $filters['scope'] === 'owned' ? 'selected' : '' ?>>Projects I own</option>
+                <option value="assigned" <?= $filters['scope'] === 'assigned' ? 'selected' : '' ?>>Assigned to me</option>
+            </select>
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="recent" <?= $filters['sort'] === 'recent' ? 'selected' : '' ?>>Recently updated</option>
+                <option value="oldest" <?= $filters['sort'] === 'oldest' ? 'selected' : '' ?>>Oldest first</option>
+                <option value="name"   <?= $filters['sort'] === 'name' ? 'selected' : '' ?>>Name (A-Z)</option>
+                <option value="status" <?= $filters['sort'] === 'status' ? 'selected' : '' ?>>Status</option>
+            </select>
+        </label>
+        <button type="submit">Apply</button>
+        <?php if ($filtersActive || $filters['sort'] !== 'recent'): ?>
+            <a href="dashboard.php">Clear</a>
+        <?php endif; ?>
+    </form>
+
     <?php if (count($projects) === 0): ?>
-        <p>You have no projects yet.</p>
+        <p><?= $filtersActive ? 'No projects match these filters.' : 'You have no projects yet.' ?></p>
     <?php else: ?>
+        <p><?= count($projects) ?> project<?= count($projects) === 1 ? '' : 's' ?><?= $filtersActive ? ' found' : '' ?></p>
         <table border="1" cellpadding="6">
             <tr>
                 <th>Name</th>
