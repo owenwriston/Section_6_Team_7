@@ -24,12 +24,12 @@ if (!$user) {
     exit;
 }
 
-// CSRF token
+//CSRF token
 if (empty($_SESSION['csrf'])) {
     $_SESSION['csrf'] = bin2hex(random_bytes(32));
 }
 
-// One-time error message left by delete-project.php
+//error mesage for delelte project
 $flashError = $_SESSION['flash_error'] ?? '';
 unset($_SESSION['flash_error']);
 
@@ -127,7 +127,7 @@ foreach ($projects as $p) {
                 <th>Name</th>
                 <th>Location</th>
                 <th>Status</th>
-                <?php if ($canDeleteAny): ?><th>Actions</th><?php endif; ?>
+                <th>Actions</th>
             </tr>
             <?php foreach ($projects as $p): ?>
                 <?php
@@ -139,18 +139,17 @@ foreach ($projects as $p) {
                     <td><a href="project-display.php?pid=<?= (int) $p['pid'] ?>"><?= htmlspecialchars($title) ?></a></td>
                     <td><?= htmlspecialchars($p['location']) ?></td>
                     <td><?= htmlspecialchars(str_replace('_', ' ', $p['status'])) ?></td>
-                    <?php if ($canDeleteAny): ?>
-                        <td>
-                            <?php if ($canDel): ?>
-                                <form method="post" action="delete-project.php"
-                                      onsubmit="return confirm(<?= htmlspecialchars(json_encode($confirm), ENT_QUOTES) ?>);">
-                                    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
-                                    <input type="hidden" name="pid" value="<?= (int) $p['pid'] ?>">
-                                    <button type="submit">Delete</button>
-                                </form>
-                            <?php endif; ?>
-                        </td>
-                    <?php endif; ?>
+                    <td>
+                        <a href="export-project-pdf.php?pid=<?= (int) $p['pid'] ?>">Export PDF</a>
+                        <?php if ($canDel): ?>
+                            <form method="post" action="delete-project.php" style="display:inline;"
+                                  onsubmit="return confirm(<?= htmlspecialchars(json_encode($confirm), ENT_QUOTES) ?>);">
+                                <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+                                <input type="hidden" name="pid" value="<?= (int) $p['pid'] ?>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
